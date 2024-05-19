@@ -17,28 +17,28 @@ this is the same idea as the Graph.hpp but this is mainly for algoriths to be do
 3. Graph.cpp
 This file provides the implementation of the Graph class declared in Graph.hpp. The key methods implemented are:
 
-loadGraph(): Loads the graph from an adjacency matrix.
-printGraph(): Prints the graph's adjacency matrix.
-isEdge(): Checks if there is an edge between two vertices.
-getEdgeValue(): Returns the value of the edge between two vertices.
-getVerticesNum(): Returns the number of vertices in the graph.
-isDirected(): Checks if the graph is directed.
-isWeighted(): Checks if the graph is weighted.
-getNeighbours(): Returns the neighbors of a vertex.
-getRow(): Returns a specific row of the adjacency matrix.
-getCol(): Returns a specific column of the adjacency matrix.
-getTranspose(): Returns the transpose of the graph.
+loadGraph: Loads the graph from an adjacency matrix.
+printGraph: Prints the graph's adjacency matrix.
+isEdge: Checks if there is an edge between two vertices.
+getEdgeValue: Returns the value of the edge between two vertices.
+getVerticesNum: Returns the number of vertices in the graph.
+isDirected: Checks if the graph is directed.
+isWeighted: Checks if the graph is weighted.
+getNeighbours: Returns the neighbors of a vertex.
+getRow: Returns a specific row of the adjacency matrix.
+getCol: Returns a specific column of the adjacency matrix.
+getTranspose: Returns the transpose of the graph.
 
 4. Algorithms.cpp
 This file implements various graph algorithms eclared in Algorithms.hpp:
 
-DFS(): Performs a depth-first search.
-isConnected(): Checks if the graph is connected.
-bellmanFord(): Uses the Bellman-Ford algorithm to detect negative cycles.
-shortestPath(): Finds the shortest path between two vertices.
-isContainsCycle(): Checks if the graph contains any cycle.
-isBipartite(): Determines if the graph is bipartite.
-negativeCycle(): Checks for the presence of negative cycles and returns the path if found.
+DFS: Performs a depth-first search.
+isConnected: Checks if the graph is connected.
+bellmanFord: Uses the Bellman-Ford algorithm to detect negative cycles.
+shortestPath: Finds the shortest path between two vertices.
+isContainsCycle: Checks if the graph contains any cycle.
+isBipartite: Determines if the graph is bipartite.
+negativeCycle: Checks for the presence of negative cycles and returns the path if found.
 
 5. Test.cpp
 This file contains test cases to make sure the implemented algorithms do their job. It has 2 test cases group, testGraph, testing the graph creation and test Algorithms wich test the algorithms functions
