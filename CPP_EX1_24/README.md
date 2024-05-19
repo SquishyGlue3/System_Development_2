@@ -2,7 +2,7 @@
 209039072
 rotem.melamed25@gmail.com -->
 
-Graph Algorithms Implementation
+****Graph Algorithms Implementation****
 
 Overview
 This project implements couple of algorithms on graphs such as, 1 -checking if the graph is connected, finding negative cycles, finding the shortest path and checking if the graph is bipartite.
