@@ -36,11 +36,19 @@ Graph &Graph::getGraph() { return *this; }
 
 int Graph::getEdgeValue(size_t i, size_t j)
 {
-  return adjacencyMatrix[i][j];
+  if (i >= adjacencyMatrix.size() || j >= adjacencyMatrix[i].size())
+  {
+    throw std::invalid_argument("Invalid index");
+  }
+  return this->adjacencyMatrix[i][j];
 }
 
 bool Graph::isEdge(size_t i, size_t j)
 {
+  if (i >= adjacencyMatrix.size() || j >= adjacencyMatrix[i].size())
+  {
+    throw std::invalid_argument("Invalid index");
+  }
   return (adjacencyMatrix[i][j] != 0); // if the value is not 0 than there is an edge
 }
 
@@ -121,32 +129,27 @@ Graph Graph::getTranspose()
   return g;
 }
 
-size_t getRowSum(std::vector<size_t> row)
+size_t Graph::getRowSum()
 {
-  size_t sum = 0;
-  for (size_t i : row)
-  {
-    sum += i;
-  }
-  return sum;
+  vector<int> row = this->getRow(0);
+  return row.size();
 }
-size_t getColSum(std::vector<size_t> col)
+
+size_t Graph::getColSum()
 {
-  size_t sum = 0;
-  for (size_t i : col)
-  {
-    sum += i;
-  }
-  return sum;
+  vector<int> col = this->getCol(0);
+  return col.size();
 }
+
 string getDimention(Graph &g) // output the dimention of a graph
 {
-  int countRow = getRowSum(g.getRow(0));
-  int countCol = getColSum(g.getCol(0));
+  int countRow = g.getRowSum();
+  int countCol = g.getColSum();
   return to_string(countRow) + "x" + to_string(countCol);
 }
-size_t getEdgesNum(Graph &g)
+size_t ariel::Graph::getEdgesNum() const
 {
+  Graph g = *this;
   size_t count = 0;
   for (size_t i = 0; i < g.getVerticesNum(); i++)
   {
@@ -168,10 +171,10 @@ Graph ariel::operator+(Graph &g1, Graph &g2)
   {
     throw std::invalid_argument("Invalid graph");
   }
-  for (size_t i = 0; i < getRowSum(g1.getRow(0)); i++)
+  for (size_t i = 0; i < g1.getRowSum(); i++)
   {
     std::vector<int> row;
-    for (size_t j = 0; j < getColSum(g1.getCol(0)); j++)
+    for (size_t j = 0; j < g1.getColSum(); j++)
     {
       row.push_back(g1.getEdgeValue(i, j) + g2.getEdgeValue(i, j)); //
     }
@@ -187,24 +190,21 @@ Graph &ariel::Graph::operator+=(Graph &g)
   return *this;
 }
 
-void ariel::Graph::operator+() const
-{
-  return;
-}
+void ariel::Graph::operator+() const{}
 
 void ariel::Graph::operator-() const
 {
   Graph g = *this;
-  for (size_t i = 0; i < getRowSum(g.getRow(0)); i++)
+  for (size_t i = 0; i < g.getRowSum(); i++)
   {
-    for (size_t j = 0; j < getColSum(g.getCol(0)); j++)
+    for (size_t j = 0; j < g.getColSum(); j++)
     {
       g.adjacencyMatrix[i][j] = -g.adjacencyMatrix[i][j];
     }
   }
 }
 
-Graph &ariel::operator-(Graph &g1, Graph &g2)
+Graph ariel::operator-(Graph &g1, Graph &g2)
 {
   if (getDimention(g1) != getDimention(g2))
   {
@@ -212,10 +212,10 @@ Graph &ariel::operator-(Graph &g1, Graph &g2)
   }
   Graph g;
   std::vector<std::vector<int>> subMatrix;
-  for (size_t i = 0; i < getRowSum(g1.getRow(0)); i++)
+  for (size_t i = 0; i < g1.getRowSum(); i++)
   {
     std::vector<int> row;
-    for (size_t j = 0; j < getColSum(g1.getCol(0)); j++)
+    for (size_t j = 0; j < g1.getColSum(); j++)
     {
       row.push_back(g1.getEdgeValue(i, j) - g2.getEdgeValue(i, j));
     }
@@ -237,9 +237,9 @@ bool ariel::operator==(Graph &g1, Graph &g2)
   {
     return false;
   }
-  for (size_t i = 0; i < getRowSum(g1.getRow(0)); i++)
+  for (size_t i = 0; i < g1.getRowSum(); i++)
   {
-    for (size_t j = 0; j < getColSum(g1.getCol(0)); j++)
+    for (size_t j = 0; j < g1.getColSum(); j++)
     {
       if (g1.getEdgeValue(i, j) != g2.getEdgeValue(i, j))
       {
@@ -251,35 +251,8 @@ bool ariel::operator==(Graph &g1, Graph &g2)
 }
 
 bool ariel::operator<(Graph &g1, Graph &g2)
-{ // step 1 - check if g1 is a submatrix of g2
-  for (size_t i = 0; i <= getRowSum(g2.getRow(0)) - getRowSum(g1.getRow(0)); i++)
-  {
-    for (size_t j = 0; j <= getColSum(g2.getCol(0)) - getColSum(g1.getCol(0)); j++)
-    {
-      bool isSubmatrix = true;
-      for (size_t k = 0; k < getRowSum(g1.getRow(0)); k++)
-      {
-        for (size_t l = 0; l < getColSum(g1.getCol(0)); l++)
-        {
-          if (g1.getEdgeValue(k, l) != g2.getEdgeValue(i + k, j + l)) // check if the submatrix is found
-          {
-            isSubmatrix = false;
-            break; // break the loop if the submatrix is not found
-          }
-        }
-        if (!isSubmatrix) // break the second loop if the submatrix is not found
-        {
-          break;
-        }
-      }
-      if (isSubmatrix)
-      {
-        return true;
-      }
-    }
-  }
-  // if the function didn't return true, move to step 2
-  if (g1 == g2) // step 2 - check if the graphs are equal
+{ 
+  if (g1 == g2) // step 1 - check if the graphs are equal
   {
     return false;
   }
@@ -287,14 +260,14 @@ bool ariel::operator<(Graph &g1, Graph &g2)
   {
     return true;
   }
-  else if (g1.getEdgesNum() == g2.getEdgesNum())
+  if (g1.getEdgesNum() == g2.getEdgesNum())
   {
     if (g1.getVerticesNum() < g2.getVerticesNum()) // step 3 - they have same amount of edges and g2 has more vertices
     {
       return true;
     }
-    return false;
   }
+  return false; // if none of the above conditions are met
 }
 
 bool ariel::operator<=(Graph &g1, Graph &g2)
@@ -319,9 +292,9 @@ bool ariel::operator!=(Graph &g1, Graph &g2)
 
 Graph &ariel::Graph::operator++()// pre-increment
 {
-  for (size_t i = 0; i < getRowSum(this->getRow(0)); i++)
+  for (size_t i = 0; i < this->getRowSum(); i++)
   {
-    for (size_t j = 0; j < getColSum(this->getCol(0)); j++)
+    for (size_t j = 0; j < this->getColSum(); j++)
     {
       this->adjacencyMatrix[i][j]++;
     }
@@ -338,9 +311,9 @@ Graph ariel::Graph::operator++(int)// post-increment
 
 Graph &ariel::Graph::operator--()// pre-decrement
 {
-  for (size_t i = 0; i < getRowSum(this->getRow(0)); i++)
+  for (size_t i = 0; i < this->getRowSum(); i++)
   {
-    for (size_t j = 0; j < getColSum(this->getCol(0)); j++)
+    for (size_t j = 0; j < this->getColSum(); j++)
     {
       this->adjacencyMatrix[i][j]--;
     }
@@ -355,21 +328,21 @@ Graph ariel::Graph::operator--(int)// post-decrement
   return g;
 }
 
-Graph &ariel::operator*(Graph &g1, Graph &g2)
+Graph ariel::operator*(Graph &g1, Graph &g2)
 {
-  if (getColSum(g1.getCol(0)) != getRowSum(g2.getRow(0)))
+  if (g1.getColSum() != g2.getRowSum())
   {
     throw std::invalid_argument("Invalid graphs multiplication");
   }
   Graph g;
   std::vector<std::vector<int>> mulMatrix;
-  for (size_t i = 0; i < getRowSum(g1.getRow(0)); i++)
+  for (size_t i = 0; i < g1.getRowSum(); i++)
   {
     std::vector<int> row;
-    for (size_t j = 0; j < getColSum(g2.getCol(0)); j++)
+    for (size_t j = 0; j < g2.getColSum(); j++)
     {
       int sum = 0;
-      for (size_t k = 0; k < getColSum(g1.getCol(0)); k++)
+      for (size_t k = 0; k < g1.getColSum(); k++)
       {
         sum += g1.getEdgeValue(i, k) * g2.getEdgeValue(k, j);
       }
@@ -381,12 +354,12 @@ Graph &ariel::operator*(Graph &g1, Graph &g2)
   return g;
 }
 
-Graph &ariel::operator*(Graph &g, int scalar)
+Graph ariel::operator*(Graph &g, int scalar)
 {
   Graph g1 = g;
-  for (size_t i = 0; i < getRowSum(g1.getRow(0)); i++)
+  for (size_t i = 0; i < g1.getRowSum(); i++)
   {
-    for (size_t j = 0; j < getColSum(g1.getCol(0)); j++)
+    for (size_t j = 0; j < g1.getColSum(); j++)
     {
       g1.adjacencyMatrix[i][j] *= scalar;
     }
@@ -396,9 +369,9 @@ Graph &ariel::operator*(Graph &g, int scalar)
 
 std::ostream &ariel::operator<<(std::ostream &os, Graph &g)
 {
-  for (size_t i = 0; i < getRowSum(g.getRow(0)); i++)
+  for (size_t i = 0; i < g.getRowSum(); i++)
   {
-    for (size_t j = 0; j < getColSum(g.getCol(0)); j++)
+    for (size_t j = 0; j < g.getColSum(); j++)
     {
       os << g.getEdgeValue(i, j) << " ";
     }
