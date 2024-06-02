@@ -9,7 +9,6 @@
 using namespace std;
 namespace ariel
 {
-
     class Graph
     {
     private:
@@ -22,18 +21,21 @@ namespace ariel
         int getEdgeValue(size_t i, size_t j);
         bool isEdge(size_t i, size_t j);
         size_t getVerticesNum();
-        size_t getEdgesNum();
+        size_t getEdgesNum() const;
         bool isDirected();
         bool isWeighted();
         std::vector<size_t> getNeighbours(size_t i);
         std::vector<int> getRow(size_t i);
+        size_t getRowSum();
+        size_t getColSum();
         std::vector<int> getCol(size_t j);
         Graph getTranspose();
+        
         friend Graph operator+(Graph &g1, Graph &g2);
         Graph& operator+=(Graph &g);
         void operator+() const;
         void operator-() const;
-        friend Graph& operator-(Graph &g1, Graph &g2);
+        friend Graph operator-(Graph &g1, Graph &g2);
         Graph& operator-=(Graph &g);
         friend bool operator<(Graph &g1, Graph &g2);
         friend bool operator<=(Graph &g1, Graph &g2);
@@ -45,8 +47,8 @@ namespace ariel
         Graph operator++(int);//post-increment, ie. g++
         Graph& operator--();//pre-decrement, ie. --g
         Graph operator--(int);//post-decrement, ie. g--
-        friend Graph& operator*(Graph &g1, Graph &g2);
-        friend Graph& operator*(Graph &g, int scalar);
+        friend Graph operator*(Graph &g1, Graph &g2);
+        friend Graph operator*(Graph &g, int scalar);
         friend std::ostream& operator<<(std::ostream &os, Graph &g);
     };
 };
