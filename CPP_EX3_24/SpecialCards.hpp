@@ -1,0 +1,13 @@
+#ifndef SPECIALCARDS_HPP
+#define SPECIALCARDS_HPP
+
+enum SpecialCard
+{
+    KNIGHT,
+    VICTORYPOINT,
+    MONOPOLY,
+    ROADBUILDING,
+    YEAROFPLENTY
+};
+
+#endif // SPECIALCARDS_HPP
